@@ -1,0 +1,29 @@
+#
+
+set -ue
+set -x
+
+trap 'echo "$0(${LINENO}) ${BASH_COMMAND}"' ERR
+
+# 引数不足の場合、失敗する
+set +e
+node lib-daisy-diagram/daisy-diagram-cli.js
+RET=$?
+set -e
+[ 0 -ne $RET ]
+
+# 以下の条件の引数を指定した場合、成功する
+# 入力パス 有効なフォーマットのファイルへのパスである
+# 出力パス 対応するファイルフォーマット(svg,png)かつ、ディレクトリを含むならばそれが存在する
+rm -rf object/test-export/
+mkdir -p object/test-export/
+node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram object/test-export/empty-document.svg
+STR=`file object/test-export/empty-document.svg` ; [[ "${STR}" =~ "SVG" ]] # file type
+
+# 引数が多すぎる場合、失敗する
+set +e
+node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram object/test-export/empty-document.svg -h
+RET=$?
+set -e
+[ 0 -ne $RET ]
+
