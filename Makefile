@@ -18,6 +18,7 @@ test: unittest command-line-test
 
 command-line-test:
 	bash command-line-test.sh
+	bash convert-test.sh
 
 unittest:
 	cd lib-daisy-diagram && npm run test

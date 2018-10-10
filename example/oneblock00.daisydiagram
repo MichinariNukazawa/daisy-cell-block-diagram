@@ -5,6 +5,12 @@
 	},
 	"filekind": "daisy diagram",
 	"diagram":{
+		"element_tree":[
+			{
+				"kind": "block",
+				"position": [ 1,1,1,1 ]
+			}
+		]
 	}
 }
 

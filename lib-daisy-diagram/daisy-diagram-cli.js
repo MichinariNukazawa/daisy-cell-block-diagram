@@ -3,6 +3,8 @@ const sprintf = require('sprintf-js').sprintf;
 const fs = require("fs");
 const path = require('path');
 
+const Diagram = require('./diagram');
+
 class DaisyIO{
 	static set_err_(err_, level, label, message)
 	{
@@ -11,23 +13,46 @@ class DaisyIO{
 		err_.message = message;
 	}
 
-	static open_doc_from_path(filepath, err_)
+	/** @return success: diagram object, error: null */
+	static open_diagram_from_path(filepath, err_)
 	{
 		let strdata = '';
 		try{
 			strdata = fs.readFileSync(filepath, 'utf-8');
 		}catch(err){
-			//console.error(err.message);
+			console.debug(err);
 			DaisyIO.set_err_(err_, 'warning', "Open", err.message);
 			return -1;
 		}
 
-		return 0;
+		let raw_diagram = {};
+		try{
+			raw_diagram = JSON.parse(strdata);
+		}catch(err){
+			console.debug(err);
+			DaisyIO.set_err_(err_, 'warning', "Open", err.message);
+			return null;
+		}
+
+		const sanitized_diagram = Diagram.sanitize(raw_diagram, err_);
+		if(null === sanitized_diagram){
+			return null;
+		}
+
+		return sanitized_diagram;
 	}
 
-	static export_doc(filepath, doc, err_)
+	static export_diagram(filepath, diagram, err_)
 	{
-		let strdata = '<?xml version="1.0" encoding="utf-8"?><svg width="32px" height="32px"></svg>'
+		// 周辺情報: 0x0pxのSVGを開くとeye of gnomeが読み込みエラーを起こす。
+
+		const diagramSize = Diagram.getSize(diagram);
+		//console.debug(diagramSize);
+		const strdata = sprintf(
+			'<?xml version="1.0" encoding="utf-8"?><svg width="%dpx" height="%dpx"></svg>',
+			diagramSize.width,
+			diagramSize.height);
+
 		try{
 			fs.writeFileSync(filepath, strdata);
 		}catch(err){
@@ -61,15 +86,15 @@ function main()
 		'export_filepath': argv[2]
 	};
 
-	let err;
-	if(0 != DaisyIO.open_doc_from_path(arg.open_filepath, err)){
-		process.stderr.write(sprintf("can not open file `%s`.\n", arg.open_filepath));
+	let err = {};
+	let diagram = DaisyIO.open_diagram_from_path(arg.open_filepath, err);
+	if(! diagram){
+		process.stderr.write(sprintf("can not open file `%s``%s`.\n", err.message, arg.open_filepath));
 		process.exit(-1);
 	}
 
-	let doc = {};
-	if(0 != DaisyIO.export_doc(arg.export_filepath, doc, err)){
-		process.stderr.write(sprintf("can not export file `%s`.\n", arg.export_filepath));
+	if(0 != DaisyIO.export_diagram(arg.export_filepath, diagram, err)){
+		process.stderr.write(sprintf("can not export file `%s``%s`.\n", err.message, arg.export_filepath));
 		process.exit(-1);
 	}
 
