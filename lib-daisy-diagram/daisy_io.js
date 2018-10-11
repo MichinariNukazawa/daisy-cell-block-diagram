@@ -2,8 +2,16 @@
 
 const sprintf = require('sprintf-js').sprintf;
 const fs = require("fs");
+const xml_formatter = require('xml-formatter');
 
+const window   = require('svgdom')
+const SVG      = require('svg.js')(window)
+const document = window.document
+
+const Version = require('./version');
 const Diagram = require('./diagram');
+const RenderingHandle = require('./renderer').RenderingHandle;
+const Renderer = require('./renderer').Renderer;
 
 module.exports = class DaisyIO{
 	static set_err_(err_, level, label, message)
@@ -48,10 +56,15 @@ module.exports = class DaisyIO{
 
 		const diagramSize = Diagram.getSize(diagram);
 		//console.debug(diagramSize);
+		/*
 		const strdata = sprintf(
 			'<?xml version="1.0" encoding="utf-8"?><svg width="%dpx" height="%dpx"></svg>',
 			diagramSize.width,
 			diagramSize.height);
+		*/
+
+		let err = {};
+		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, err);
 
 		try{
 			fs.writeFileSync(filepath, strdata);
@@ -61,6 +74,39 @@ module.exports = class DaisyIO{
 		}
 
 		return 0;
+	}
+
+	static get_dummy_draw_diagram_(diagram, err_)
+	{
+		let dummy_elem = document.createElementNS('http://www.w3.org/2000/svg','svg');
+		let dummy_rhandle = new RenderingHandle(dummy_elem);
+		let draw = dummy_rhandle.get_draw();
+		if(null === draw){
+			DaisyIO.set_err_(err_, "warning", "Export", "internal dummy element can not generate.");
+			return null;
+		}
+
+		Renderer.rendering_(dummy_rhandle, diagram);
+
+		dummy_rhandle.get_focus_group().remove();
+
+		return draw;
+	}
+
+	static get_svg_string_from_diagram_(diagram, err_)
+	{
+		let draw = DaisyIO.get_dummy_draw_diagram_(diagram, err_);
+		if(null === draw){
+			return null;
+		}
+
+		let s = draw.svg();
+
+		const h = sprintf("<!-- Generator: %s %s  -->", Version.get_name(), Version.get_version());
+		s = h + s;
+
+		let options = {indentation: '\t',};
+		return xml_formatter(s, options);
 	}
 };
 

@@ -1,4 +1,5 @@
 #
+# depend: sudo apt install librsvg2-bin -y
 
 set -ue
 set -x
@@ -17,8 +18,9 @@ set -e
 # 出力パス 対応するファイルフォーマット(svg,png)かつ、ディレクトリを含むならばそれが存在する
 rm -rf object/test-export/
 mkdir -p object/test-export/
-node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram object/test-export/empty-document.svg
-STR=`file object/test-export/empty-document.svg` ; [[ "${STR}" =~ "SVG" ]] # file type
+DST_PATH=object/test-export/empty-document.svg
+node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram ${DST_PATH}
+rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
 
 # 引数が多すぎる場合、失敗する
 set +e

@@ -7,6 +7,7 @@ trap 'echo "$0(${LINENO}) ${BASH_COMMAND}"' ERR
 
 rm -rf object/test-convert/
 mkdir -p object/test-convert/
-node lib-daisy-diagram/daisy-diagram-cli.js example/oneblock00.daisydiagram object/test-convert/oneblock00.svg
-STR=`file object/test-convert/oneblock00.svg` ; [[ "${STR}" =~ "SVG" ]] # file type
+DST_PATH=object/test-convert/oneblock00.svg
+node lib-daisy-diagram/daisy-diagram-cli.js example/oneblock00.daisydiagram ${DST_PATH}
+rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
 
