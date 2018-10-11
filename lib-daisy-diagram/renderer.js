@@ -122,8 +122,25 @@ module.exports.Renderer = class Renderer{
 			'stroke-width':		'2',
 		};
 		const radius = 0;
-		block_group.rect(box.width, box.height).move(box.x, box.y)
+		let rect_element = block_group.rect(box.width, box.height).move(box.x, box.y)
 			.attr(attr).radius(radius);
+
+		const text = ObjectUtil.getPropertyFromPath(block_element, 'text');
+		if(text){
+			const centor = {
+				'x': box.x + (box.width  / 2),
+				'y': box.y
+			};
+			rect_element = block_group.text(text)
+					.move(centor.x, centor.y)
+					.font({
+						'fill': 'rgba(  0,  0,  0,1.0)' ,
+						'size': '22px',
+						'text-anchor': "middle",
+						//'dominant-baseline': "middle"
+					});
+			//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと
+		}
 	}
 };
 
