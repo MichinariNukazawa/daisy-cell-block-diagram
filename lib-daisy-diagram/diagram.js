@@ -28,12 +28,24 @@ module.exports = class Diagram{
 		return ObjectUtil.deeepcopy(src_diagram);
 	}
 
+	static getMemberOrDefault(diagram, property_path)
+	{
+		const default_diagram = {
+			"property":{
+				"cell_block_size": {"width": 128, "height": 64},
+			},
+		};
+		const member = ObjectUtil.getPropertyFromPath(diagram, property_path);
+		if(member){
+			return member;
+		}
+
+		return ObjectUtil.getPropertyFromPath(default_diagram, property_path);
+	}
+
 	static getOneCellBlockSize(diagram)
 	{
-		return {
-			'width':	128,
-			'height':	64
-		};
+		return Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
 	}
 
 	static getSize(diagram)
