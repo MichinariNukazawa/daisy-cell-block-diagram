@@ -95,8 +95,8 @@ module.exports.Renderer = class Renderer{
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width': ((block_element.position[2] + 1) * onePanelSize.width)  - point.x,
-			'height':((block_element.position[3] + 1) * onePanelSize.height) - point.y
+			'width':  point.x + (block_element.position[2] * onePanelSize.width),
+			'height': point.y + (block_element.position[3] * onePanelSize.height)
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',
