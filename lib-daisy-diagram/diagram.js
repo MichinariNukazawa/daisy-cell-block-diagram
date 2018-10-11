@@ -11,13 +11,13 @@ module.exports = class Diagram{
 			return null;
 		}
 
-		const filekind = ObjectUtil.getPropertyFromPath(src_diagram, 'filekind');
-		if(null === filekind){
-			err_.message = 'nothing property `filekind`';
+		const file_kind = ObjectUtil.getPropertyFromPath(src_diagram, 'file_kind');
+		if(null === file_kind){
+			err_.message = 'nothing property `file_kind`';
 			return null;
 		}
-		if('daisy diagram' != filekind){
-			err_.message = sprintf('invalid `filekind`:%s`', filekind);
+		if('daisy diagram' != file_kind){
+			err_.message = sprintf('invalid `file_kind`:%s`', file_kind);
 			return null;
 		}
 
