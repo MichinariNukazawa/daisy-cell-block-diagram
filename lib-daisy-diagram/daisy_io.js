@@ -42,12 +42,12 @@ module.exports = class DaisyIO{
 			return null;
 		}
 
-		const sanitized_diagram = Diagram.sanitize(raw_diagram, err_);
+		const sanitized_diagram = Diagram.sanitize_document(raw_diagram, err_);
 		if(null === sanitized_diagram){
 			return null;
 		}
 
-		return sanitized_diagram;
+		return sanitized_diagram.diagram;
 	}
 
 	static export_diagram(filepath, diagram, err_)

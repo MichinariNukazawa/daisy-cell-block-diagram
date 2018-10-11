@@ -74,11 +74,11 @@ module.exports.Renderer = class Renderer{
 		draw.size(diagramSize.width, diagramSize.height);
 
 		let length = 0;
-		if(ObjectUtil.getPropertyFromPath(diagram, 'diagram.element_tree')){
-			length = diagram.diagram.element_tree.length;
+		if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
+			length = diagram.element_tree.length;
 		}
 		for(let i = 0; i < length; i++){
-			const element = diagram.diagram.element_tree[i];
+			const element = diagram.element_tree[i];
 			switch(element.kind){
 				case 'block':
 				{
@@ -87,10 +87,10 @@ module.exports.Renderer = class Renderer{
 					break;
 				default:
 				{
-					console.error(i, diagram.diagram_elements[i]);
+					console.error(i, diagram_elements[i]);
 					const msg = sprintf("internal error: invalid element kind `%s`(%d,%d)",
-						diagram.diagram_elements[i].kind,
-						diagram.diagram_elements[i].id,
+						diagram_elements[i].kind,
+						diagram_elements[i].id,
 						i
 					);
 					alert(msg);

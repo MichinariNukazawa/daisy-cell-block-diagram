@@ -4,7 +4,7 @@ const ObjectUtil = require('./object_util');
 
 module.exports = class Diagram{
 
-	static sanitize(src_diagram, err_)
+	static sanitize_document(src_diagram, err_)
 	{
 		if(! src_diagram.hasOwnProperty('diagram')){
 			err_.message = 'nothing property `diagram`';
@@ -56,13 +56,13 @@ module.exports = class Diagram{
 
 	static getCellBlockArea(diagram)
 	{
-		if(! ObjectUtil.getPropertyFromPath(diagram, 'diagram.element_tree')){
+		if(! ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
 			return [0,0];
 		}
 
 		let area = [0,0];
-		for(let i = 0; i < diagram.diagram.element_tree.length; i++){
-			const element = diagram.diagram.element_tree[i];
+		for(let i = 0; i < diagram.element_tree.length; i++){
+			const element = diagram.element_tree[i];
 			const footpos = [
 				element.position[0] + element.position[2],
 				element.position[1] + element.position[3]
