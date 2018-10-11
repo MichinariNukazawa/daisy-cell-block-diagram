@@ -22,52 +22,30 @@ module.exports.RenderingHandle = class RenderingHandle{
 		return this.draw;
 	}
 
-	get_other_group()
+	get_current_group()
 	{
-		return this.groups.other_group;
+		return this.groups.current_group;
 	}
 
-	get_lifeline_group()
+	get_editor_group()
 	{
-		return this.groups.lifeline_group;
-	}
-
-	get_spec_group()
-	{
-		return this.groups.spec_group;
-	}
-
-	get_fragment_group()
-	{
-		return this.groups.fragment_group;
-	}
-
-	get_focus_group()
-	{
-		return this.groups.focus_group;
-	}
-
-	get_background_group()
-	{
-		return this.groups.background_group;
+		return this.groups.editor_group;
 	}
 
 	clear()
 	{
 		this.draw.clear();
-		this.groups.background_group = this.draw.group().addClass('dd__background-group');
-		this.groups.lifeline_group = this.draw.group().addClass('dd__lifeline-group');
-		this.groups.spec_group = this.draw.group().addClass('dd__spec-group');
-		this.groups.other_group = this.draw.group().addClass('dd__other-group');
-		this.groups.fragment_group = this.draw.group().addClass('dd__fragment-group');
-		this.groups.focus_group = this.draw.group().addClass('dd__focus-group');
+		this.groups.root_group = this.draw.group().addClass('dd__root-group');
+		this.groups.editor_group = this.draw.group().addClass('dd__editor-group');
+
+		this.groups.current_group = this.groups.root_group;
 	}
 };
 
 module.exports.Renderer = class Renderer{
 	static rendering_(rendering_handle, diagram)
 	{
-		let other_group = rendering_handle.get_other_group();
+		let current_group = rendering_handle.get_current_group();
 
 		if(null === diagram){
 			console.debug('Rendering:diagram is null');

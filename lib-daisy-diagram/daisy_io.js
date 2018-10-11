@@ -88,7 +88,7 @@ module.exports = class DaisyIO{
 
 		Renderer.rendering_(dummy_rhandle, diagram);
 
-		dummy_rhandle.get_focus_group().remove();
+		dummy_rhandle.get_editor_group().remove();
 
 		return draw;
 	}
