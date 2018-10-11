@@ -65,6 +65,7 @@ module.exports.Renderer = class Renderer{
 			switch(element.kind){
 				case 'block':
 				{
+					Renderer.draw_block_element_(rendering_handle, diagram, element);
 				}
 					break;
 				default:
@@ -79,6 +80,33 @@ module.exports.Renderer = class Renderer{
 				}
 			}
 		}
+	}
+
+	static draw_block_element_(rendering_handle, diagram, block_element)
+	{
+		let current_group = rendering_handle.get_current_group();
+		let block_group = current_group.group().addClass('dd__block-element-group');
+
+		const onePanelSize = Diagram.getOnePanelSize(diagram);
+		const point = {
+			'x': block_element.position[0] * onePanelSize.width,
+			'y': block_element.position[1] * onePanelSize.height
+		};
+		const box = {
+			'x': point.x,
+			'y': point.y,
+			'width': ((block_element.position[2] + 1) * onePanelSize.width)  - point.x,
+			'height':((block_element.position[3] + 1) * onePanelSize.height) - point.y
+		};
+		const attr = {
+			'stroke':		'rgba(  0,  0,  0,1.0)',
+			'fill':			'rgba(255,255,255,1.0)',
+			'fill-opacity':		'1',
+			'stroke-width':		'2',
+		};
+		const radius = 0;
+		block_group.rect(box.width, box.height).move(box.x, box.y)
+			.attr(attr).radius(radius);
 	}
 };
 

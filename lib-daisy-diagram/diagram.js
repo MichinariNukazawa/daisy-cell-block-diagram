@@ -28,12 +28,21 @@ module.exports = class Diagram{
 		return ObjectUtil.deeepcopy(src_diagram);
 	}
 
+	static getOnePanelSize(diagram)
+	{
+		return {
+			'width':	128,
+			'height':	64
+		};
+	}
+
 	static getSize(diagram)
 	{
+		const onePanelSize = Diagram.getOnePanelSize(diagram);
 		const panelArea = Diagram.getPanelArea(diagram);
 		return {
-			'width':	(panelArea[0]) * 128,
-			'height':	(panelArea[1]) * 64
+			'width':	(panelArea[0]) * onePanelSize.width,
+			'height':	(panelArea[1]) * onePanelSize.height
 		};
 	}
 
