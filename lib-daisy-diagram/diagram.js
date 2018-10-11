@@ -55,12 +55,13 @@ module.exports = class Diagram{
 		let area = [0,0];
 		for(let i = 0; i < diagram.diagram.element_tree.length; i++){
 			const element = diagram.diagram.element_tree[i];
-			area[0] = (area[0] > element.position[2])? area[0] : element.position[2];
-			area[1] = (area[1] > element.position[3])? area[1] : element.position[3];
+			const footpos = [
+				element.position[0] + element.position[2],
+				element.position[1] + element.position[3]
+			];
+			area[0] = (area[0] > footpos[0])? area[0] : footpos[0];
+			area[1] = (area[1] > footpos[1])? area[1] : footpos[1];
 		}
-
-		area[0] += 1;
-		area[1] += 1;
 
 		return area;
 	}
