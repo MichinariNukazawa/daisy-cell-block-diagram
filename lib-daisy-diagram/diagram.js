@@ -46,6 +46,14 @@ module.exports = class Diagram{
 		};
 	}
 
+	static getBaseMargin(diagram)
+	{
+		return {
+			'width':	16,
+			'height':	16
+		};
+	}
+
 	static getPanelArea(diagram)
 	{
 		if(! ObjectUtil.getPropertyFromPath(diagram, 'diagram.element_tree')){

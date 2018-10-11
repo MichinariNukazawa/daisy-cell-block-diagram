@@ -87,6 +87,7 @@ module.exports = class DaisyIO{
 		}
 
 		Renderer.rendering_(dummy_rhandle, diagram);
+		Renderer.expand_diagram_margin_for_export(dummy_rhandle, diagram);
 
 		dummy_rhandle.get_editor_group().remove();
 

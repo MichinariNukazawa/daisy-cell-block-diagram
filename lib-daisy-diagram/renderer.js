@@ -22,6 +22,11 @@ module.exports.RenderingHandle = class RenderingHandle{
 		return this.draw;
 	}
 
+	get_root_group()
+	{
+		return this.groups.root_group;
+	}
+
 	get_current_group()
 	{
 		return this.groups.current_group;
@@ -43,6 +48,18 @@ module.exports.RenderingHandle = class RenderingHandle{
 };
 
 module.exports.Renderer = class Renderer{
+	static expand_diagram_margin_for_export(rendering_handle, diagram)
+	{
+		const diagramSize = Diagram.getSize(diagram);
+		const diagramBaseMargin = Diagram.getBaseMargin(diagram);
+		let draw = rendering_handle.get_draw();
+		draw.size(
+			diagramSize.width  + (diagramBaseMargin.width  * 2),
+			diagramSize.height + (diagramBaseMargin.height * 2));
+
+		rendering_handle.get_root_group().translate(diagramBaseMargin.width, diagramBaseMargin.height);
+	}
+
 	static rendering_(rendering_handle, diagram)
 	{
 		let current_group = rendering_handle.get_current_group();
