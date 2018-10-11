@@ -104,16 +104,16 @@ module.exports.Renderer = class Renderer{
 		let current_group = rendering_handle.get_current_group();
 		let block_group = current_group.group().addClass('dd__block-element-group');
 
-		const onePanelSize = Diagram.getOnePanelSize(diagram);
+		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
 		const point = {
-			'x': block_element.position[0] * onePanelSize.width,
-			'y': block_element.position[1] * onePanelSize.height
+			'x': block_element.position[0] * oneCellBlockSize.width,
+			'y': block_element.position[1] * oneCellBlockSize.height
 		};
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width':  block_element.position[2] * onePanelSize.width,
-			'height': block_element.position[3] * onePanelSize.height
+			'width':  block_element.position[2] * oneCellBlockSize.width,
+			'height': block_element.position[3] * oneCellBlockSize.height
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',

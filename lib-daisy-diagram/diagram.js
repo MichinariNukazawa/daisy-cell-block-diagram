@@ -28,7 +28,7 @@ module.exports = class Diagram{
 		return ObjectUtil.deeepcopy(src_diagram);
 	}
 
-	static getOnePanelSize(diagram)
+	static getOneCellBlockSize(diagram)
 	{
 		return {
 			'width':	128,
@@ -38,11 +38,11 @@ module.exports = class Diagram{
 
 	static getSize(diagram)
 	{
-		const onePanelSize = Diagram.getOnePanelSize(diagram);
-		const panelArea = Diagram.getPanelArea(diagram);
+		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
+		const panelArea = Diagram.getCellBlockArea(diagram);
 		return {
-			'width':	(panelArea[0]) * onePanelSize.width,
-			'height':	(panelArea[1]) * onePanelSize.height
+			'width':	(panelArea[0]) * oneCellBlockSize.width,
+			'height':	(panelArea[1]) * oneCellBlockSize.height
 		};
 	}
 
@@ -54,7 +54,7 @@ module.exports = class Diagram{
 		};
 	}
 
-	static getPanelArea(diagram)
+	static getCellBlockArea(diagram)
 	{
 		if(! ObjectUtil.getPropertyFromPath(diagram, 'diagram.element_tree')){
 			return [0,0];
