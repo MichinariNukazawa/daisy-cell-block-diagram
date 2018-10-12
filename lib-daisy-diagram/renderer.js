@@ -52,14 +52,14 @@ module.exports.Renderer = class Renderer{
 	static expand_diagram_margin_for_export(rendering_handle, diagram)
 	{
 		const diagramSize = Diagram.getSize(diagram);
-		const diagramBaseMargin = Diagram.getBaseMargin(diagram);
+		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print_margin');
 		let draw = rendering_handle.get_draw();
 		draw.size(
-			diagramSize.x + (diagramBaseMargin.x * 2),
-			diagramSize.y + (diagramBaseMargin.y * 2)
+			diagramSize.x + (property__print_margin.x * 2),
+			diagramSize.y + (property__print_margin.y * 2)
 		);
 
-		rendering_handle.get_root_group().translate(diagramBaseMargin.x, diagramBaseMargin.y);
+		rendering_handle.get_root_group().translate(property__print_margin.x, property__print_margin.y);
 	}
 
 	static rendering_(rendering_handle, diagram)
@@ -107,7 +107,7 @@ module.exports.Renderer = class Renderer{
 		let current_group = rendering_handle.get_current_group();
 		let block_group = current_group.group().addClass('dd__block-element-group');
 
-		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
+		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
 		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
 		const cell_block_child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_child_margin');
 		const offset = {
@@ -115,14 +115,14 @@ module.exports.Renderer = class Renderer{
 			'y': cell_block_margin.y + (cell_block_child_margin.y * recurse_info.level),
 		};
 		const point = {
-			'x': (block_element.position[0] * oneCellBlockSize.x) + offset.x,
-			'y': (block_element.position[1] * oneCellBlockSize.y) + offset.y,
+			'x': (block_element.position[0] * property__cell_block_size.x) + offset.x,
+			'y': (block_element.position[1] * property__cell_block_size.y) + offset.y,
 		};
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width':  (block_element.position[2] * oneCellBlockSize.x) - (offset.x * 2),
-			'height': (block_element.position[3] * oneCellBlockSize.y) - (offset.y * 2),
+			'width':  (block_element.position[2] * property__cell_block_size.x) - (offset.x * 2),
+			'height': (block_element.position[3] * property__cell_block_size.y) - (offset.y * 2),
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',

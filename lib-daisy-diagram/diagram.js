@@ -35,6 +35,7 @@ module.exports = class Diagram{
 				"cell_block_size":		{"x": 128, "y":  64},
 				"cell_block_margin":		{"x":   0, "y":   0},
 				"cell_block_child_margin":	{"x":   8, "y":   8},
+				"print_margin":			{"x":  16, "y":  16},
 			},
 		};
 		const member = ObjectUtil.getPropertyFromPath(diagram, property_path);
@@ -45,30 +46,17 @@ module.exports = class Diagram{
 		return ObjectUtil.getPropertyFromPath(default_diagram, property_path);
 	}
 
-	static getOneCellBlockSize(diagram)
-	{
-		return Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
-	}
-
 	static getSize(diagram)
 	{
-		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
-		const panelArea = Diagram.getCellBlockArea(diagram);
+		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
+		const cellBlockArea = Diagram.getCellBlockArea_(diagram);
 		return {
-			'x': (panelArea[0]) * oneCellBlockSize.x,
-			'y': (panelArea[1]) * oneCellBlockSize.y
+			'x': (cellBlockArea[0]) * property__cell_block_size.x,
+			'y': (cellBlockArea[1]) * property__cell_block_size.y
 		};
 	}
 
-	static getBaseMargin(diagram)
-	{
-		return {
-			'x': 16,
-			'y': 16
-		};
-	}
-
-	static getCellBlockArea(diagram)
+	static getCellBlockArea_(diagram)
 	{
 		if(! ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
 			return [0,0];
