@@ -55,10 +55,11 @@ module.exports.Renderer = class Renderer{
 		const diagramBaseMargin = Diagram.getBaseMargin(diagram);
 		let draw = rendering_handle.get_draw();
 		draw.size(
-			diagramSize.width  + (diagramBaseMargin.width  * 2),
-			diagramSize.height + (diagramBaseMargin.height * 2));
+			diagramSize.x + (diagramBaseMargin.x * 2),
+			diagramSize.y + (diagramBaseMargin.y * 2)
+		);
 
-		rendering_handle.get_root_group().translate(diagramBaseMargin.width, diagramBaseMargin.height);
+		rendering_handle.get_root_group().translate(diagramBaseMargin.x, diagramBaseMargin.y);
 	}
 
 	static rendering_(rendering_handle, diagram)
@@ -110,18 +111,18 @@ module.exports.Renderer = class Renderer{
 		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
 		const cell_block_child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_child_margin');
 		const offset = {
-			'x': cell_block_margin.width + (cell_block_child_margin.width * recurse_info.level),
-			'y': cell_block_margin.width + (cell_block_child_margin.width * recurse_info.level),
+			'x': cell_block_margin.x + (cell_block_child_margin.x * recurse_info.level),
+			'y': cell_block_margin.y + (cell_block_child_margin.y * recurse_info.level),
 		};
 		const point = {
-			'x': (block_element.position[0] * oneCellBlockSize.width)  + offset.x,
-			'y': (block_element.position[1] * oneCellBlockSize.height) + offset.y,
+			'x': (block_element.position[0] * oneCellBlockSize.x) + offset.x,
+			'y': (block_element.position[1] * oneCellBlockSize.y) + offset.y,
 		};
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width':  (block_element.position[2] * oneCellBlockSize.width) -  (offset.x * 2),
-			'height': (block_element.position[3] * oneCellBlockSize.height) - (offset.y * 2),
+			'width':  (block_element.position[2] * oneCellBlockSize.x) - (offset.x * 2),
+			'height': (block_element.position[3] * oneCellBlockSize.y) - (offset.y * 2),
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',

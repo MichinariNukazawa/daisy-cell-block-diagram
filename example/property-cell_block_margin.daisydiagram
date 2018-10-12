@@ -6,8 +6,8 @@
 	"file_kind": "daisy diagram",
 	"diagram":{
 		"property":{
-			"cell_block_size": {"width": 256, "height": 512},
-			"cell_block_margin": {"width": 8, "height": 24}
+			"cell_block_size": {"x": 256, "y": 512},
+			"cell_block_margin": {"x": 8, "y": 24}
 		},
 		"element_tree":[
 			{

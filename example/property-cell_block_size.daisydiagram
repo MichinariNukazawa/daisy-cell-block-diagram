@@ -6,7 +6,7 @@
 	"file_kind": "daisy diagram",
 	"diagram":{
 		"property":{
-			"cell_block_size": {"width": 256, "height": 512}
+			"cell_block_size": {"x": 256, "y": 512}
 		},
 		"element_tree":[
 			{
