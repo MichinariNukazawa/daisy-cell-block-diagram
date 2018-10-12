@@ -1,0 +1,25 @@
+{
+	"editor_info": {
+		"application_name": "michinari.nukazawa@gmail.com",
+		"version": "20191009"
+	},
+	"file_kind": "daisy diagram",
+	"diagram":{
+		"property":{
+			"cell_block_size": {"width": 256, "height": 512},
+			"cell_block_margin": {"width": 8, "height": 24}
+		},
+		"element_tree":[
+			{
+				"kind": "block",
+				"position": [ 0,0,1,1 ]
+			},
+			{
+				"kind": "block",
+				"position": [ 1,0,1,1 ]
+			}
+		]
+	}
+}
+
+

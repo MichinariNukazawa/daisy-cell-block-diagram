@@ -105,15 +105,16 @@ module.exports.Renderer = class Renderer{
 		let block_group = current_group.group().addClass('dd__block-element-group');
 
 		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
+		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
 		const point = {
-			'x': block_element.position[0] * oneCellBlockSize.width,
-			'y': block_element.position[1] * oneCellBlockSize.height
+			'x': (block_element.position[0] * oneCellBlockSize.width) + cell_block_margin.width,
+			'y': (block_element.position[1] * oneCellBlockSize.height) + cell_block_margin.height,
 		};
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width':  block_element.position[2] * oneCellBlockSize.width,
-			'height': block_element.position[3] * oneCellBlockSize.height
+			'width':  (block_element.position[2] * oneCellBlockSize.width)   - (cell_block_margin.width * 2),
+			'height': (block_element.position[3] * oneCellBlockSize.height) - (cell_block_margin.height * 2),
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',

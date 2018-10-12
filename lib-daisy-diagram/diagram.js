@@ -33,6 +33,7 @@ module.exports = class Diagram{
 		const default_diagram = {
 			"property":{
 				"cell_block_size": {"width": 128, "height": 64},
+				"cell_block_margin": {"width": 0, "height": 0},
 			},
 		};
 		const member = ObjectUtil.getPropertyFromPath(diagram, property_path);
