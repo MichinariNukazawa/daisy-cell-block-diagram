@@ -5,6 +5,7 @@ const SVG      = require('svg.js')(window)
 const document = window.document
 
 const Diagram = require('./diagram');
+const Element = require('./element');
 const ObjectUtil = require('./object_util');
 
 module.exports.RenderingHandle = class RenderingHandle{
@@ -73,16 +74,12 @@ module.exports.Renderer = class Renderer{
 		const diagramSize = Diagram.getSize(diagram);
 		draw.size(diagramSize.width, diagramSize.height);
 
-		let length = 0;
-		if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
-			length = diagram.element_tree.length;
-		}
-		for(let i = 0; i < length; i++){
-			const element = diagram.element_tree[i];
+		const func = function(recurse_info, element, opt){
+			//const element = diagram.element_tree[i];
 			switch(element.kind){
 				case 'block':
 				{
-					Renderer.draw_block_element_(rendering_handle, diagram, element);
+					Renderer.draw_block_element_(rendering_handle, diagram, element, recurse_info, opt);
 				}
 					break;
 				default:
@@ -96,25 +93,35 @@ module.exports.Renderer = class Renderer{
 					alert(msg);
 				}
 			}
+			return true;
+		};
+		let opt = {};
+		if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
+			Element.recursive(diagram.element_tree, func, opt);
 		}
 	}
 
-	static draw_block_element_(rendering_handle, diagram, block_element)
+	static draw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
 	{
 		let current_group = rendering_handle.get_current_group();
 		let block_group = current_group.group().addClass('dd__block-element-group');
 
 		const oneCellBlockSize = Diagram.getOneCellBlockSize(diagram);
 		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
+		const cell_block_child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_child_margin');
+		const offset = {
+			'x': cell_block_margin.width + (cell_block_child_margin.width * recurse_info.level),
+			'y': cell_block_margin.width + (cell_block_child_margin.width * recurse_info.level),
+		};
 		const point = {
-			'x': (block_element.position[0] * oneCellBlockSize.width) + cell_block_margin.width,
-			'y': (block_element.position[1] * oneCellBlockSize.height) + cell_block_margin.height,
+			'x': (block_element.position[0] * oneCellBlockSize.width)  + offset.x,
+			'y': (block_element.position[1] * oneCellBlockSize.height) + offset.y,
 		};
 		const box = {
 			'x': point.x,
 			'y': point.y,
-			'width':  (block_element.position[2] * oneCellBlockSize.width)   - (cell_block_margin.width * 2),
-			'height': (block_element.position[3] * oneCellBlockSize.height) - (cell_block_margin.height * 2),
+			'width':  (block_element.position[2] * oneCellBlockSize.width) -  (offset.x * 2),
+			'height': (block_element.position[3] * oneCellBlockSize.height) - (offset.y * 2),
 		};
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',
