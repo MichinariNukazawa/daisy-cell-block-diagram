@@ -66,6 +66,11 @@ module.exports.RenderingHandle = class RenderingHandle{
 		return this.draw;
 	}
 
+	get_background_group()
+	{
+		return this.groups.background_group;
+	}
+
 	get_root_group()
 	{
 		return this.groups.root_group;
@@ -84,6 +89,7 @@ module.exports.RenderingHandle = class RenderingHandle{
 	clear()
 	{
 		this.draw.clear();
+		this.groups.background_group = this.draw.group().addClass('dd__background-group');
 		this.groups.root_group = this.draw.group().addClass('dd__root-group');
 		this.groups.editor_group = this.draw.group().addClass('dd__editor-group');
 
@@ -117,6 +123,8 @@ module.exports.Renderer = class Renderer{
 		let draw = rendering_handle.get_draw();
 		const diagramSize = Diagram.getSize(diagram);
 		draw.size(diagramSize.width, diagramSize.height);
+
+		Renderer.draw_background_(rendering_handle, diagram);
 
 		// ** drawing preprocess
 		let elements_of_id_key = {};
@@ -183,6 +191,28 @@ module.exports.Renderer = class Renderer{
 				Element.recursive(diagram.element_tree, func, opt);
 			}
 		}
+	}
+
+	static draw_background_(rendering_handle, diagram)
+	{
+		let background_group = rendering_handle.get_background_group();
+
+		const diagramSize = Diagram.getSize(diagram);
+		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print_margin');
+		const property__print_border_width = Diagram.getMemberOrDefault(diagram, 'property.print_border_width');
+
+		const attr = {
+			'fill':			Diagram.getMemberOrDefault(diagram, 'property.print_background_color'),
+			'stroke':		Diagram.getMemberOrDefault(diagram, 'property.print_border_color'),
+			'stroke-width':		property__print_border_width,
+		};
+		const fbox = [
+			diagramSize.x + (property__print_margin.x * 2) - (property__print_border_width),
+			diagramSize.y + (property__print_margin.y * 2) - (property__print_border_width),
+		]; // strokeの分を引く
+		background_group.rect(fbox[0], fbox[1])
+			.move((property__print_border_width / 2), (property__print_border_width / 2))
+			.attr(attr);
 	}
 
 	static predraw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
