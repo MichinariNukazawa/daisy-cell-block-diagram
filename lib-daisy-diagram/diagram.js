@@ -30,6 +30,20 @@ module.exports = class Diagram{
 		return ObjectUtil.deeepcopy(src_diagram);
 	}
 
+	static getArrowMemberOrDefault(diagram, arrow, property_path)
+	{
+		const default_arrow = {
+			"is_fill": false,
+			"size": [16, 16],
+		};
+		const member = ObjectUtil.getPropertyFromPath(arrow, property_path);
+		if(member){
+			return member;
+		}
+
+		return ObjectUtil.getPropertyFromPath(default_arrow, property_path);
+	}
+
 	static getMemberOrDefault(diagram, property_path)
 	{
 		const default_diagram = {

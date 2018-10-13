@@ -9,11 +9,44 @@ const Diagram = require('./diagram');
 const Element = require('./element');
 const ObjectUtil = require('./object_util');
 
-class ElementUtil{
+class GeometoryUtil{
 	static getPointFromBoxOfRate(box, rate){
 		return {
 			'x': box.x + (box.width  * rate[0]),
 			'y': box.y + (box.height * rate[1]),
+		};
+	}
+
+	static getRadianFromPointRelation(point, center)
+	{
+		return GeometoryUtil.getRadianFromPoint({'x': point.x - center.x, 'y': point.y - center.y});
+	}
+
+	static getRadianFromPoint(point)
+	{
+		return Math.atan2(point.y, point.x);
+	}
+
+	static getDegreeFromRadian(radian)
+	{
+		return radian * (180.0 / Math.PI);
+	}
+
+	static getRadianFromDegree(degree)
+	{
+		return degree * (Math.PI / 180.0);
+	}
+
+	static getRotatePointFromRadian(point, radian, center)
+	{
+		const rel = {'x': point.x - center.x, 'y':point.y - center.y};
+		const aft = [
+			(rel.x * Math.cos(radian)) - (rel.y * Math.sin(radian)),
+			(rel.x * Math.sin(radian)) + (rel.y * Math.cos(radian)),
+		];
+		return {
+			'x': aft[0] + center.x,
+			'y': aft[1] + center.x,
 		};
 	}
 };
@@ -227,7 +260,7 @@ module.exports.Renderer = class Renderer{
 
 		let points = [];
 		for(let i = 0; i < line_element.edges.length; i++){
-			const edge = line_element.edges[i];
+			let edge = line_element.edges[i];
 
 			const edge_element = ObjectUtil.getPropertyFromPath(opt.elements_of_id_key, edge.edge_element_id);
 			if(! edge_element){
@@ -242,8 +275,12 @@ module.exports.Renderer = class Renderer{
 				return false;
 			}
 
-			const point = ElementUtil.getPointFromBoxOfRate(box, edge.point_of_rate);
+			const point = GeometoryUtil.getPointFromBoxOfRate(box, edge.point_of_rate);
 			points.push(point);
+
+			edge.work = {
+				'box': box,
+			};
 		}
 
 		if(points.length < 2){
@@ -260,7 +297,53 @@ module.exports.Renderer = class Renderer{
 				.stroke({ width: 2, linecap: 'round'})
 				.fill('none');
 
+		for(let i = 0; i < line_element.edges.length; i++){
+			const edge = line_element.edges[i];
+
+			const arrow = ObjectUtil.getPropertyFromPath(edge, 'arrow');
+			if(arrow){
+				let arrow_for_line_group = line_group.group().addClass('dd__arrow-for__line-element-group');
+				Renderer.draw_line_element_arrow_(arrow_for_line_group, diagram, i, points, arrow);
+			}
+		}
+
 		return true;
+	}
+
+	static draw_line_element_arrow_(arrow_for_line_group, diagram, i, points, arrow)
+	{
+		if(points.length < 2){
+			console.error("bug");
+			return null;
+		}
+
+		const point = points[i];
+
+		const size = Diagram.getArrowMemberOrDefault(diagram, arrow, 'size');
+
+		// arrow geometory (degree 0 is) ```<-``` from radian base sita.
+		let svgjs_points = [
+			point.x + size[0], point.y + size[1],
+			point.x, point.y,
+			point.x + size[0], point.y - size[1],
+		];
+
+		let polyline = arrow_for_line_group.polyline(svgjs_points).stroke({ width: 3, linecap: 'round', });
+		const is_fill = Diagram.getArrowMemberOrDefault(diagram, arrow, 'is_fill');
+		if(!is_fill){
+			polyline.fill('none').plot();
+		}
+
+		let radian = 0;
+		if((i + 1) < points.length){
+			radian = GeometoryUtil.getRadianFromPointRelation(points[i + 1], point);
+		}else{
+			radian = GeometoryUtil.getRadianFromPointRelation(points[i - 1], point);
+		}
+		const degree = GeometoryUtil.getDegreeFromRadian(radian);
+		polyline.rotate(degree, point.x, point.y);
+
+		return polyline;
 	}
 };
 
