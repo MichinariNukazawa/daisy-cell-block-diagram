@@ -58,7 +58,7 @@ module.exports = class ObjectUtil{
 
 	static getPropertyFromPath(obj, path)
 	{
-		const keys = path.split('.');
+		const keys = (typeof path === 'string')? path.split('.') : [path];
 		let o = obj;
 		for(let i = 0; i < keys.length; i++){
 			if(undefined === o || null === o || typeof o !== 'object'){

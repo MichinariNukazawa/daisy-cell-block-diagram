@@ -1,5 +1,7 @@
 'use strict';
 
+const sprintf = require('sprintf-js').sprintf;
+
 const ObjectUtil = require('./object_util');
 
 module.exports = class Diagram{
@@ -62,15 +64,32 @@ module.exports = class Diagram{
 			return [0,0];
 		}
 
+		//! @note child_elementsを包んでいることをfile-formatでが保証しているのでトップレベルのElementだけ見れば良い
 		let area = [0,0];
 		for(let i = 0; i < diagram.element_tree.length; i++){
 			const element = diagram.element_tree[i];
-			const footpos = [
-				element.position[0] + element.position[2],
-				element.position[1] + element.position[3]
-			];
-			area[0] = (area[0] > footpos[0])? area[0] : footpos[0];
-			area[1] = (area[1] > footpos[1])? area[1] : footpos[1];
+			switch(element.kind){
+				case 'block':
+				{
+					const footpos = [
+						element.position[0] + element.position[2],
+						element.position[1] + element.position[3]
+					];
+					area[0] = (area[0] > footpos[0])? area[0] : footpos[0];
+					area[1] = (area[1] > footpos[1])? area[1] : footpos[1];
+				}
+					break;
+				case 'line':
+				{
+					//! @todo not implement
+				}
+					break;
+				default:
+					console.error(sprintf("internal error: invalid element kind `%s`(%d,%d)",
+							elements[i].kind,
+							elements[i].id,
+							i));
+			}
 		}
 
 		return area;

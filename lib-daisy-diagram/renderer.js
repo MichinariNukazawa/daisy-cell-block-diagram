@@ -1,5 +1,6 @@
 'use strict';
 
+const sprintf = require('sprintf-js').sprintf;
 const window   = require('svgdom')
 const SVG      = require('svg.js')(window)
 const document = window.document
@@ -7,6 +8,15 @@ const document = window.document
 const Diagram = require('./diagram');
 const Element = require('./element');
 const ObjectUtil = require('./object_util');
+
+class ElementUtil{
+	static getPointFromBoxOfRate(box, rate){
+		return {
+			'x': box.x + (box.width  * rate[0]),
+			'y': box.y + (box.height * rate[1]),
+		};
+	}
+};
 
 module.exports.RenderingHandle = class RenderingHandle{
 	constructor(elemId)
@@ -75,38 +85,75 @@ module.exports.Renderer = class Renderer{
 		const diagramSize = Diagram.getSize(diagram);
 		draw.size(diagramSize.width, diagramSize.height);
 
-		const func = function(recurse_info, element, opt){
-			//const element = diagram.element_tree[i];
-			switch(element.kind){
-				case 'block':
-				{
-					Renderer.draw_block_element_(rendering_handle, diagram, element, recurse_info, opt);
+		// ** drawing preprocess
+		let elements_of_id_key = {};
+		{
+			const func = function(recurse_info, element, opt){
+				const id = ObjectUtil.getPropertyFromPath(element, 'id');
+				if(id){
+					opt.elements_of_id_key[id] = element;
 				}
-					break;
-				default:
-				{
-					console.error(i, diagram_elements[i]);
-					const msg = sprintf("internal error: invalid element kind `%s`(%d,%d)",
-						diagram_elements[i].kind,
-						diagram_elements[i].id,
-						i
-					);
-					alert(msg);
+
+				switch(element.kind){
+					case 'block':
+					{
+						Renderer.predraw_block_element_(rendering_handle, diagram, element, recurse_info, opt);
+					}
+						break;
+					case 'line':
+					{
+						// Renderer.draw_block_element_(rendering_handle, diagram, element, recurse_info, opt);
+					}
+						break;
+					default:
+					{
+						console.error(sprintf("internal error: invalid element kind `%s`(%d,%d)",
+								elements[i].kind,
+								elements[i].id,
+								i));
+					}
 				}
+				return true;
+			};
+			let opt = {'elements_of_id_key': elements_of_id_key};
+			if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
+				Element.recursive(diagram.element_tree, func, opt);
 			}
-			return true;
-		};
-		let opt = {};
-		if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
-			Element.recursive(diagram.element_tree, func, opt);
+		}
+
+		// ** drawing
+		{
+			const func = function(recurse_info, element, opt){
+				switch(element.kind){
+					case 'block':
+					{
+						Renderer.draw_block_element_(rendering_handle, diagram, element, recurse_info, opt);
+					}
+						break;
+					case 'line':
+					{
+						Renderer.draw_line_element_(rendering_handle, diagram, element, recurse_info, opt);
+					}
+						break;
+					default:
+					{
+						console.error(sprintf("internal error: invalid element kind `%s`(%d,%d)",
+								elements[i].kind,
+								elements[i].id,
+								i));
+					}
+				}
+				return true;
+			};
+			let opt = {'elements_of_id_key': elements_of_id_key};
+			if(ObjectUtil.getPropertyFromPath(diagram, 'element_tree')){
+				Element.recursive(diagram.element_tree, func, opt);
+			}
 		}
 	}
 
-	static draw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
+	static predraw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
 	{
-		let current_group = rendering_handle.get_current_group();
-		let block_group = current_group.group().addClass('dd__block-element-group');
-
 		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
 		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
 		const cell_block_child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_child_margin');
@@ -124,6 +171,25 @@ module.exports.Renderer = class Renderer{
 			'width':  (block_element.position[2] * property__cell_block_size.x) - (offset.x * 2),
 			'height': (block_element.position[3] * property__cell_block_size.y) - (offset.y * 2),
 		};
+
+		block_element.work = {
+			'box': box,
+		};
+
+		return true;
+	}
+
+	static draw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
+	{
+		let current_group = rendering_handle.get_current_group();
+		let block_group = current_group.group().addClass('dd__block-element-group');
+
+		const box = ObjectUtil.getPropertyFromPath(block_element, 'work.box');
+		if(! box){
+			console.error(block_element)
+			return false;
+		}
+
 		const attr = {
 			'stroke':		'rgba(  0,  0,  0,1.0)',
 			'fill':			'rgba(255,255,255,1.0)',
@@ -150,6 +216,51 @@ module.exports.Renderer = class Renderer{
 					});
 			//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと
 		}
+
+		return true;
+	}
+
+	static draw_line_element_(rendering_handle, diagram, line_element, recurse_info, opt)
+	{
+		let current_group = rendering_handle.get_current_group();
+		let line_group = current_group.group().addClass('dd__line-element-group');
+
+		let points = [];
+		for(let i = 0; i < line_element.edges.length; i++){
+			const edge = line_element.edges[i];
+
+			const edge_element = ObjectUtil.getPropertyFromPath(opt.elements_of_id_key, edge.edge_element_id);
+			if(! edge_element){
+				console.error(i, line_element.edges);
+				// skip
+				continue;
+			}
+
+			const box = ObjectUtil.getPropertyFromPath(edge_element, 'work.box');
+			if(! box){
+				console.error(edge_element)
+				return false;
+			}
+
+			const point = ElementUtil.getPointFromBoxOfRate(box, edge.point_of_rate);
+			points.push(point);
+		}
+
+		if(points.length < 2){
+			return;
+		}
+
+		let svgjs_points = [];
+		for(let i = 0; i < points.length; i++){
+			svgjs_points.push(points[i].x);
+			svgjs_points.push(points[i].y);
+		}
+
+		let polyline = line_group.polyline(svgjs_points)
+				.stroke({ width: 2, linecap: 'round'})
+				.fill('none');
+
+		return true;
 	}
 };
 
