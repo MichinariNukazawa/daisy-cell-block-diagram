@@ -48,9 +48,11 @@ module.exports = class Diagram{
 	{
 		const default_diagram = {
 			"property":{
-				"cell_block_size":		{"x": 128, "y":  64},
-				"cell_block_margin":		{"x":   0, "y":   0},
-				"cell_block_child_margin":	{"x":   8, "y":   8},
+				"cell_block":{
+					"size":			{"x": 128, "y":  64},
+					"parent_margin":	{"x":   0, "y":   0},
+					"child_margin":		{"x":   8, "y":   8},
+				},
 				"print":{
 					"margin":		{"x":  16, "y":  16},
 					"background_color":	"rgba(255, 255, 255, 0.0)",
@@ -78,7 +80,7 @@ module.exports = class Diagram{
 
 	static getSize(diagram)
 	{
-		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
+		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block.size');
 		const cellBlockArea = Diagram.getCellBlockArea_(diagram);
 		return {
 			'x': (cellBlockArea[0]) * property__cell_block_size.x,

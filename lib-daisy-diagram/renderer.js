@@ -225,12 +225,12 @@ module.exports.Renderer = class Renderer{
 
 	static predraw_block_element_(rendering_handle, diagram, block_element, recurse_info, opt)
 	{
-		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block_size');
-		const cell_block_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_margin');
-		const cell_block_child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block_child_margin');
+		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block.size');
+		const property__cell_block__parent_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block.parent_margin');
+		const property__cell_block__child_margin = Diagram.getMemberOrDefault(diagram, 'property.cell_block.child_margin');
 		const offset = {
-			'x': cell_block_margin.x + (cell_block_child_margin.x * recurse_info.level),
-			'y': cell_block_margin.y + (cell_block_child_margin.y * recurse_info.level),
+			'x': property__cell_block__parent_margin.x + (property__cell_block__child_margin.x * recurse_info.level),
+			'y': property__cell_block__parent_margin.y + (property__cell_block__child_margin.y * recurse_info.level),
 		};
 		const point = {
 			'x': (block_element.position[0] * property__cell_block_size.x) + offset.x,

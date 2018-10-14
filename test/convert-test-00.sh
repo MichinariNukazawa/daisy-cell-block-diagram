@@ -22,12 +22,12 @@ DST_PATH=object/test-convert-00/$(basename ${SRC_PATH}).svg
 node lib-daisy-diagram/daisy-diagram-cli.js ${SRC_PATH} ${DST_PATH}
 rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
 
-SRC_PATH=example/property-cell_block_size.daisydiagram
+SRC_PATH=example/property-cell_block-size.daisydiagram
 DST_PATH=object/test-convert-00/$(basename ${SRC_PATH}).svg
 node lib-daisy-diagram/daisy-diagram-cli.js ${SRC_PATH} ${DST_PATH}
 rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
 
-SRC_PATH=example/property-cell_block_margin.daisydiagram
+SRC_PATH=example/property-cell_block-parent_margin.daisydiagram
 DST_PATH=object/test-convert-00/$(basename ${SRC_PATH}).svg
 node lib-daisy-diagram/daisy-diagram-cli.js ${SRC_PATH} ${DST_PATH}
 rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
