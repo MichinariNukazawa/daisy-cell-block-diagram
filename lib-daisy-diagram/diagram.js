@@ -51,10 +51,12 @@ module.exports = class Diagram{
 				"cell_block_size":		{"x": 128, "y":  64},
 				"cell_block_margin":		{"x":   0, "y":   0},
 				"cell_block_child_margin":	{"x":   8, "y":   8},
-				"print_margin":			{"x":  16, "y":  16},
-				"print_background_color":	"rgba(255, 255, 255, 0.0)",
-				"print_border_width":		0,
-				"print_border_color":		"rgba(255, 255, 255, 0.0)",
+				"print":{
+					"margin":		{"x":  16, "y":  16},
+					"background_color":	"rgba(255, 255, 255, 0.0)",
+					"border_width":		0,
+					"border_color":		"rgba(255, 255, 255, 0.0)",
+				},
 				"parent_block_style":{
 					"text_size":		"22px",
 					"text_anchor_x":	"middle",

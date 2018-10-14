@@ -109,7 +109,7 @@ module.exports.Renderer = class Renderer{
 	static expand_diagram_margin_for_export(rendering_handle, diagram)
 	{
 		const diagramSize = Diagram.getSize(diagram);
-		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print_margin');
+		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print.margin');
 		let draw = rendering_handle.get_draw();
 		draw.size(
 			diagramSize.x + (property__print_margin.x * 2),
@@ -206,12 +206,12 @@ module.exports.Renderer = class Renderer{
 		let background_group = rendering_handle.get_background_group();
 
 		const diagramSize = Diagram.getSize(diagram);
-		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print_margin');
-		const property__print_border_width = Diagram.getMemberOrDefault(diagram, 'property.print_border_width');
+		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print.margin');
+		const property__print_border_width = Diagram.getMemberOrDefault(diagram, 'property.print.border_width');
 
 		const attr = {
-			'fill':			Diagram.getMemberOrDefault(diagram, 'property.print_background_color'),
-			'stroke':		Diagram.getMemberOrDefault(diagram, 'property.print_border_color'),
+			'fill':			Diagram.getMemberOrDefault(diagram, 'property.print.background_color'),
+			'stroke':		Diagram.getMemberOrDefault(diagram, 'property.print.border_color'),
 			'stroke-width':		property__print_border_width,
 		};
 		const fbox = [

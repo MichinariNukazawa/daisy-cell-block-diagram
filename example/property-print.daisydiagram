@@ -6,10 +6,12 @@
 	"file_kind": "daisy diagram",
 	"diagram":{
 		"property":{
-			"print_margin": {"x": 8, "y":32},
-			"print_background_color": "rgba(240, 240, 240, 1.0)",
-			"print_border_width": 16,
-			"print_border_color": "rgba( 32, 32, 128, 1.0)"
+			"print":{
+				"margin": {"x": 8, "y":32},
+				"background_color": "rgba(240, 240, 240, 1.0)",
+				"border_width": 16,
+				"border_color": "rgba( 32, 32, 128, 1.0)"
+			}
 		},
 		"element_tree":[
 			{
