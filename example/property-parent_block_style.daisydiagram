@@ -1,0 +1,38 @@
+{
+	"editor_info": {
+		"application_name": "michinari.nukazawa@gmail.com",
+		"version": "20191009"
+	},
+	"file_kind": "daisy diagram",
+	"diagram":{
+		"property":{
+			"parent_block_style":{
+				"text_size": "12px",
+				"text_anchor_x": "left",
+				"text_color": "rgba(255, 160, 32, 1.0)",
+				"border_radius": 12,
+				"border_width": 8,
+				"background_color": "rgba(255, 235, 235, 1.0)",
+				"foreground_color": "rgba(255, 32, 32, 1.0)"
+			}
+		},
+		"element_tree":[
+			{
+				"kind": "block",
+				"position": [ 0,0,2,1 ],
+				"text": "Sample 0"
+			},
+			{
+				"kind": "block",
+				"position": [ 0,3,3,1 ],
+				"child_elements":[
+					{
+						"kind": "block",
+						"position": [ 2,3,1,1 ],
+						"text": "Sample 1"
+					}
+				]
+			}
+		]
+	}
+}

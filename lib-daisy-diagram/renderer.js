@@ -253,28 +253,61 @@ module.exports.Renderer = class Renderer{
 			return false;
 		}
 
+		const border_width = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.border_width');
+		const box_border = {
+			'x' : box.x + (border_width / 2.0),
+			'y' : box.y + (border_width / 2.0),
+			'width'  : box.width  - (border_width),
+			'height' : box.height - (border_width),
+		}; // SVGで枠を描くと線幅により膨らむため、borderを描画する位置を線幅の半分だけ縮小して、cell_boxの内側に収める
 		const attr = {
-			'stroke':		'rgba(  0,  0,  0,1.0)',
-			'fill':			'rgba(255,255,255,1.0)',
-			'fill-opacity':		'1',
-			'stroke-width':		'2',
+			'stroke':		Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.foreground_color'),
+			'fill':			Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.background_color'),
+			'stroke-width':		border_width,
 		};
-		const radius = 0;
-		let rect_element = block_group.rect(box.width, box.height).move(box.x, box.y)
-			.attr(attr).radius(radius);
+		const radius = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.border_radius');
+		let rect_element = block_group.rect(box_border.width, box_border.height)
+			.move(box_border.x, box_border.y)
+			.attr(attr)
+			.radius(radius);
 
 		const text = ObjectUtil.getPropertyFromPath(block_element, 'text');
 		if(text){
-			const centor = {
-				'x': box.x + (box.width  / 2),
-				'y': box.y
-			};
+			let text_draw_point;
+			const text_anchor_x = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_anchor_x');
+			const box_content = {
+				'x' : box.x + border_width,
+				'y' : box.y + border_width,
+				'width'  : box.width  - (border_width * 2),
+				'height' : box.height - (border_width * 2),
+			}; // contentという名前だがpaddingは入ってない
+			switch(text_anchor_x){
+				case 'left':
+				{
+					text_draw_point = {
+						'x': box_content.x + (radius / 4.0),
+						'y': box_content.y + (radius / 4.0),
+					};
+				}
+					break;
+				case 'middle':
+				{
+					text_draw_point = {
+						'x': box_content.x + (box_content.width  / 2),
+						'y': box_content.y,
+					};
+				}
+					break;
+				default:
+					console.error('unknown', text_anchor_x);
+					return;
+			}
 			rect_element = block_group.text(text)
-					.move(centor.x, centor.y)
+					.move(text_draw_point.x, text_draw_point.y)
 					.font({
-						'fill': 'rgba(  0,  0,  0,1.0)' ,
-						'size': '22px',
-						'text-anchor': "middle",
+						'fill': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_color'),
+						'size': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_size'),
+						'text-anchor': text_anchor_x,
 						//'dominant-baseline': "middle"
 					});
 			//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと

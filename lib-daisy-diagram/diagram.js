@@ -55,6 +55,15 @@ module.exports = class Diagram{
 				"print_background_color":	"rgba(255, 255, 255, 0.0)",
 				"print_border_width":		0,
 				"print_border_color":		"rgba(255, 255, 255, 0.0)",
+				"parent_block_style":{
+					"text_size":		"22px",
+					"text_anchor_x":	"middle",
+					"text_color":		"rgba(  0,   0,   0, 1.0)",
+					"border_radius":	0,
+					"border_width":		2,
+					"background_color":	"rgba(255, 255, 255, 1.0)",
+					"foreground_color": 	"rgba(  0,   0,   0, 1.0)",
+				}
 			},
 		};
 		const member = ObjectUtil.getPropertyFromPath(diagram, property_path);
