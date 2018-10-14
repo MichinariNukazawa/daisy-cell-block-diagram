@@ -348,26 +348,26 @@ module.exports.Renderer = class Renderer{
 		let line_group = current_group.group().addClass('dd__line-element-group');
 
 		let points = [];
-		for(let i = 0; i < line_element.edges.length; i++){
-			let edge = line_element.edges[i];
+		for(let i = 0; i < line_element.anchor_points.length; i++){
+			let anchor_point = line_element.anchor_points[i];
 
-			const edge_element = ObjectUtil.getPropertyFromPath(opt.elements_of_id_key, edge.edge_element_id);
-			if(! edge_element){
-				console.error(i, line_element.edges);
+			const anchor_point_element = ObjectUtil.getPropertyFromPath(opt.elements_of_id_key, anchor_point.anchor_point_element_id);
+			if(! anchor_point_element){
+				console.error(i, line_element.anchor_points);
 				// skip
 				continue;
 			}
 
-			const box = ObjectUtil.getPropertyFromPath(edge_element, 'work.box');
+			const box = ObjectUtil.getPropertyFromPath(anchor_point_element, 'work.box');
 			if(! box){
-				console.error(edge_element)
+				console.error(anchor_point_element)
 				return false;
 			}
 
-			const point = GeometoryUtil.getPointFromBoxOfRate(box, edge.point_of_rate);
+			const point = GeometoryUtil.getPointFromBoxOfRate(box, anchor_point.point_of_rate);
 			points.push(point);
 
-			edge.work = {
+			anchor_point.work = {
 				'box': box,
 			};
 		}
@@ -386,10 +386,10 @@ module.exports.Renderer = class Renderer{
 				.stroke({ width: 2, linecap: 'round'})
 				.fill('none');
 
-		for(let i = 0; i < line_element.edges.length; i++){
-			const edge = line_element.edges[i];
+		for(let i = 0; i < line_element.anchor_points.length; i++){
+			const anchor_point = line_element.anchor_points[i];
 
-			const arrow = ObjectUtil.getPropertyFromPath(edge, 'arrow');
+			const arrow = ObjectUtil.getPropertyFromPath(anchor_point, 'arrow');
 			if(arrow){
 				let arrow_for_line_group = line_group.group().addClass('dd__arrow-for__line-element-group');
 				Renderer.draw_line_element_arrow_(arrow_for_line_group, diagram, i, points, arrow);

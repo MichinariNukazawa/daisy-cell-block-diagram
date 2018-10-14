@@ -30,9 +30,9 @@
 			},
 			{
 				"kind": "line",
-				"edges": [
+				"anchor_points": [
 					{
-						"edge_element_id": 3,
+						"anchor_point_element_id": 3,
 						"point_of_rate": [0.5, 0],
 						"arrow":{
 							"is_fill": true,
@@ -40,7 +40,7 @@
 						}
 					},
 					{
-						"edge_element_id": 2,
+						"anchor_point_element_id": 2,
 						"point_of_rate": [1, 0.5],
 						"arrow":{}
 					}

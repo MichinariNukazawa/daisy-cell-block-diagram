@@ -34,13 +34,13 @@
 			},
 			{
 				"kind": "line",
-				"edges": [
+				"anchor_points": [
 					{
-						"edge_element_id": 2,
+						"anchor_point_element_id": 2,
 						"point_of_rate": [1, 0.5]
 					},
 					{
-						"edge_element_id": 4,
+						"anchor_point_element_id": 4,
 						"point_of_rate": [0, 0.5]
 					}
 				],
@@ -48,13 +48,13 @@
 			},
 			{
 				"kind": "line",
-				"edges": [
+				"anchor_points": [
 					{
-						"edge_element_id": 2,
+						"anchor_point_element_id": 2,
 						"point_of_rate": [0.5, 1]
 					},
 					{
-						"edge_element_id": 5,
+						"anchor_point_element_id": 5,
 						"point_of_rate": [0.5, 0]
 					}
 				],
@@ -62,13 +62,13 @@
 			},
 			{
 				"kind": "line",
-				"edges": [
+				"anchor_points": [
 					{
-						"edge_element_id": 3,
+						"anchor_point_element_id": 3,
 						"point_of_rate": [0.5, 0]
 					},
 					{
-						"edge_element_id": 2,
+						"anchor_point_element_id": 2,
 						"point_of_rate": [1, 0.5]
 					}
 				],
