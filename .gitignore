@@ -52,6 +52,7 @@ doxygen/
 
 *.txt
 
+*-work
 
 node_modules/
 release/
