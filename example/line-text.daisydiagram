@@ -1,0 +1,79 @@
+{
+	"editor_info": {
+		"application_name": "michinari.nukazawa@gmail.com",
+		"version": "20191009"
+	},
+	"file_kind": "daisy diagram",
+	"diagram":{
+		"element_tree":[
+			{
+				"kind": "block",
+				"position": [ 0,0,1,1 ],
+				"id": 2
+			},
+			{
+				"kind": "block",
+				"position": [ 6,0,1,1 ],
+				"id": 4
+			},
+			{
+				"kind": "block",
+				"position": [ 0,3,1,1 ],
+				"id": 5
+			},
+			{
+				"kind": "block",
+				"position": [ 0,3,3,1 ],
+				"child_elements":[
+					{
+						"kind": "block",
+						"position": [ 2,3,1,1 ],
+						"id": 3
+					}
+				]
+			},
+			{
+				"kind": "line",
+				"edges": [
+					{
+						"edge_element_id": 2,
+						"point_of_rate": [1, 0.5]
+					},
+					{
+						"edge_element_id": 4,
+						"point_of_rate": [0, 0.5]
+					}
+				],
+				"text": "Test Line01"
+			},
+			{
+				"kind": "line",
+				"edges": [
+					{
+						"edge_element_id": 2,
+						"point_of_rate": [0.5, 1]
+					},
+					{
+						"edge_element_id": 5,
+						"point_of_rate": [0.5, 0]
+					}
+				],
+				"text": "Test Line02"
+			},
+			{
+				"kind": "line",
+				"edges": [
+					{
+						"edge_element_id": 3,
+						"point_of_rate": [0.5, 0]
+					},
+					{
+						"edge_element_id": 2,
+						"point_of_rate": [1, 0.5]
+					}
+				],
+				"text": "Test Line03"
+			}
+		]
+	}
+}

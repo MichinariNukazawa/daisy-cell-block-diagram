@@ -49,6 +49,14 @@ class GeometoryUtil{
 			'y': aft[1] + center.x,
 		};
 	}
+
+	static getCenterFromTwoPoint(point0, point1)
+	{
+		return {
+			'x': point0.x + ((point1.x - point0.x) / 2.0),
+			'y': point0.y + ((point1.y - point0.y) / 2.0),
+		};
+	}
 };
 
 module.exports.RenderingHandle = class RenderingHandle{
@@ -271,47 +279,65 @@ module.exports.Renderer = class Renderer{
 			.attr(attr)
 			.radius(radius);
 
-		const text = ObjectUtil.getPropertyFromPath(block_element, 'text');
-		if(text){
-			let text_draw_point;
-			const text_anchor_x = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_anchor_x');
-			const box_content = {
-				'x' : box.x + border_width,
-				'y' : box.y + border_width,
-				'width'  : box.width  - (border_width * 2),
-				'height' : box.height - (border_width * 2),
-			}; // contentという名前だがpaddingは入ってない
-			switch(text_anchor_x){
-				case 'left':
-				{
-					text_draw_point = {
-						'x': box_content.x + (radius / 4.0),
-						'y': box_content.y + (radius / 4.0),
-					};
-				}
-					break;
-				case 'middle':
-				{
-					text_draw_point = {
-						'x': box_content.x + (box_content.width  / 2),
-						'y': box_content.y,
-					};
-				}
-					break;
-				default:
-					console.error('unknown', text_anchor_x);
-					return;
-			}
-			rect_element = block_group.text(text)
-					.move(text_draw_point.x, text_draw_point.y)
-					.font({
-						'fill': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_color'),
-						'size': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_size'),
-						'text-anchor': text_anchor_x,
-						//'dominant-baseline': "middle"
-					});
-			//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと
+		Renderer.draw_text_tmp_(block_group, diagram, block_element);
+
+		return true;
+	}
+
+	static draw_text_tmp_(current_group, diagram, element)
+	{
+		const text = ObjectUtil.getPropertyFromPath(element, 'text');
+		if(! text){
+			return true;
 		}
+
+		const box = ObjectUtil.getPropertyFromPath(element, 'work.box');
+		if(! box){
+			console.error(element)
+			return false;
+		}
+
+		const border_width = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.border_width');
+		const radius = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.border_radius');
+
+		let text_draw_point;
+		const text_anchor_x = Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_anchor_x');
+		const box_content = {
+			'x' : box.x + border_width,
+			'y' : box.y + border_width,
+			'width'  : box.width  - (border_width * 2),
+			'height' : box.height - (border_width * 2),
+		}; // contentという名前だがpaddingは入ってない
+		switch(text_anchor_x){
+			case 'left':
+			{
+				text_draw_point = {
+					'x': box_content.x + (radius / 4.0),
+					'y': box_content.y + (radius / 4.0),
+				};
+			}
+				break;
+			case 'middle':
+			{
+				text_draw_point = {
+					'x': box_content.x + (box_content.width  / 2),
+					'y': box_content.y,
+				};
+			}
+				break;
+			default:
+				console.error('unknown', text_anchor_x);
+				return;
+		}
+		let text_element = current_group.text(text)
+				.move(text_draw_point.x, text_draw_point.y)
+				.font({
+					'fill': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_color'),
+					'size': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_size'),
+					'text-anchor': text_anchor_x,
+					//'dominant-baseline': "middle"
+				});
+		//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと
 
 		return true;
 	}
@@ -369,6 +395,34 @@ module.exports.Renderer = class Renderer{
 				Renderer.draw_line_element_arrow_(arrow_for_line_group, diagram, i, points, arrow);
 			}
 		}
+
+		const text_style = {};
+		const point = GeometoryUtil.getCenterFromTwoPoint(points[0], points[points.length - 1]);
+		Renderer.draw_text_(line_group, diagram, line_element, point, text_style);
+
+		return true;
+	}
+
+	static draw_text_(current_group, diagram, element, point, text_style)
+	{
+		const text = ObjectUtil.getPropertyFromPath(element, 'text');
+		if(! text){
+			return true;
+		}
+
+		const text_draw_point = point;
+		const text_anchor_x = 'left';
+
+		let text_element = current_group.text(text)
+				.move(text_draw_point.x, text_draw_point.y)
+				.font({
+					// 'fill': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_color'),
+					'fill': 'rgba(0, 0, 0, 1.0)',
+					'size': Diagram.getMemberOrDefault(diagram, 'property.parent_block_style.text_size'),
+					'text-anchor': text_anchor_x,
+					//'dominant-baseline': "middle"
+				});
+		//! @notice 2018/10時点では'dominant-baseline'はchromeのみ有効とのこと
 
 		return true;
 	}
