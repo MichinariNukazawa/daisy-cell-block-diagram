@@ -6,11 +6,11 @@ all:
 	exit 1
 
 run:
-	#cd lib-daisy-diagram && npm run build
-	#node lib-daisy-diagram/daisy-diagram-cli.js
+	#npm run build
+	#node lib/daisy-diagram-cli.js
 
 clean:
-	rm -rf object/ release/
+	rm -rf object/
 
 .PHONY: test unittest command-line-test
 
@@ -22,5 +22,5 @@ command-line-test:
 	bash command-line-test/convert-test-01.sh
 
 unittest:
-	cd lib-daisy-diagram && npm run test
+	npm run test
 
