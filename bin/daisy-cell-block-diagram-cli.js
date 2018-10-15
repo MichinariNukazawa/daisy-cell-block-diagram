@@ -1,15 +1,15 @@
-'use strict';
+#!/usr/bin/env node
+//'use strict';
 
-const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 
-const DaisyIO = require('./daisy_io');
+const DaisyIO = require('../index').DaisyIO;
 
 function main()
 {
 	// コマンドライン引数を[1]からに調整(node実行の場合に必要)
 	let argv = process.argv;
-	if(argv[1].endsWith('daisy-diagram-cli.js')){
+	if(argv[0].endsWith('node')){
 		argv.shift();
 	}
 
