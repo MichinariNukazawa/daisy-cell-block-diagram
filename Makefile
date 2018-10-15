@@ -12,8 +12,9 @@ run:
 clean:
 	rm -rf object/
 
-.PHONY: test unittest command-line-test
+.PHONY: test unittest command-line-test ci-test
 
+ci-test: test
 test: unittest command-line-test
 
 command-line-test:

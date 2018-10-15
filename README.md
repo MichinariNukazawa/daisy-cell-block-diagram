@@ -1,6 +1,8 @@
 daisy cell block diagram (library)
 ====  
 
+[![Build Status](https://travis-ci.org/MichinariNukazawa/daisy-cell-block-diagram.svg?branch=master)](https://travis-ci.org/MichinariNukazawa/daisy-cell-block-diagram)  
+
 # Abort
 「セルブロック図」の描画と、ファイルIOのためのライブラリ。  
 
