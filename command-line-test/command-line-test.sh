@@ -19,12 +19,12 @@ set -e
 rm -rf object/test-export/
 mkdir -p object/test-export/
 DST_PATH=object/test-export/empty-document.svg
-node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram ${DST_PATH}
+node lib-daisy-diagram/daisy-diagram-cli.js fileformat-example/empty-document.daisydiagram ${DST_PATH}
 rsvg-convert -o ${DST_PATH}.png ${DST_PATH} # check file type is svg.
 
 # 引数が多すぎる場合、失敗する
 set +e
-node lib-daisy-diagram/daisy-diagram-cli.js example/empty-document.daisydiagram object/test-export/empty-document.svg -h
+node lib-daisy-diagram/daisy-diagram-cli.js fileformat-example/empty-document.daisydiagram object/test-export/empty-document.svg -h
 RET=$?
 set -e
 [ 0 -ne $RET ]
