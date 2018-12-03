@@ -3,7 +3,6 @@
 const sprintf = require('sprintf-js').sprintf;
 
 const Diagram = require('./diagram');
-const Element = require('./element');
 const ObjectUtil = require('./object-util');
 
 class GeometoryUtil{
@@ -128,6 +127,8 @@ module.exports.Renderer = class Renderer{
 
 	static rendering_(rendering_handle, diagram)
 	{
+		const Element = require('./element');
+
 		let current_group = rendering_handle.get_current_group();
 
 		if(null === diagram){
