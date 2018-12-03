@@ -70,6 +70,11 @@ module.exports.RenderingHandle = class RenderingHandle{
 		return this.draw;
 	}
 
+	get_root_group()
+	{
+		return this.groups.root_group;
+	}
+
 	get_background_group()
 	{
 		return this.groups.background_group;
@@ -93,11 +98,12 @@ module.exports.RenderingHandle = class RenderingHandle{
 	clear()
 	{
 		this.draw.clear();
-		this.groups.background_group = this.draw.group().addClass('dd__background-group');
-		this.groups.document_root_group = this.draw.group().addClass('dd__document-root-group');
-		this.groups.editor_group = this.draw.group().addClass('dd__editor-group');
+		this.groups.root_group			= this.draw.group().addClass('dd__root-group');
+		this.groups.background_group		= this.get_root_group().group().addClass('dd__background-group');
+		this.groups.document_root_group		= this.get_root_group().group().addClass('dd__document-root-group');
+		this.groups.editor_group		= this.get_root_group().group().addClass('dd__editor-group');
 
-		this.groups.current_group = this.groups.document_root_group;
+		this.groups.current_group		= this.groups.document_root_group;
 	}
 };
 
