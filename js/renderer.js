@@ -75,9 +75,9 @@ module.exports.RenderingHandle = class RenderingHandle{
 		return this.groups.background_group;
 	}
 
-	get_root_group()
+	get_document_root_group()
 	{
-		return this.groups.root_group;
+		return this.groups.document_root_group;
 	}
 
 	get_current_group()
@@ -94,10 +94,10 @@ module.exports.RenderingHandle = class RenderingHandle{
 	{
 		this.draw.clear();
 		this.groups.background_group = this.draw.group().addClass('dd__background-group');
-		this.groups.root_group = this.draw.group().addClass('dd__root-group');
+		this.groups.document_root_group = this.draw.group().addClass('dd__document-root-group');
 		this.groups.editor_group = this.draw.group().addClass('dd__editor-group');
 
-		this.groups.current_group = this.groups.root_group;
+		this.groups.current_group = this.groups.document_root_group;
 	}
 };
 
@@ -122,7 +122,7 @@ module.exports.Renderer = class Renderer{
 			diagramSize.y + (property__print_margin.y * 2)
 		);
 
-		rendering_handle.get_root_group().translate(property__print_margin.x, property__print_margin.y);
+		rendering_handle.get_document_root_group().translate(property__print_margin.x, property__print_margin.y);
 	}
 
 	static rendering_(rendering_handle, diagram)
