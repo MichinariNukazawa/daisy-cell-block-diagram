@@ -3,6 +3,12 @@
 
 const sprintf = require('sprintf-js').sprintf;
 
+const window   = require('svgdom')
+const SVG      = require('svg.js')(window)
+const document = window.document
+
+global.document = document;
+
 const DaisyIO = require('../index').DaisyIO;
 
 function main()
