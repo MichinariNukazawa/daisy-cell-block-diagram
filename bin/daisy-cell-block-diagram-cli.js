@@ -11,40 +11,50 @@ global.document = document;
 
 const DaisyIO = require('../index').DaisyIO;
 
-function main()
+function process_argument(argv)
 {
 	// コマンドライン引数を[1]からに調整(node実行の場合に必要)
-	let argv = process.argv;
 	if(argv[0].endsWith('node')){
 		argv.shift();
 	}
 
-	//for(let i = 0;i < argv.length; i++){
-	//	console.debug("argv[" + i + "] = " + argv[i]);
-	//}
+	const Cli = require('../js/cli');
+	let arg = Cli.parse(argv);
 
-	if(argv.length <= 2 || 3 < argv.length){
-		process.stderr.write(sprintf("invalid arguments:%d.\n", argv.length));
+	return arg;
+}
+
+function main()
+{
+	let argv = process.argv;
+	const arg = process_argument(argv);
+
+	if(null != arg.err){
+		process.stderr.write(sprintf("%s\n", arg.message));
 		process.exit(-1);
 	}
 
-	const arg = {
-		'open_filepath': argv[1],
-		'export_filepath': argv[2]
-	};
+	if(argv.lenght <= 1){
+		process.stderr.write(sprintf("error: nothing arguments.\n"));
+		process.exit(-1);
+	}
 
 	let err = {};
 	let diagram = DaisyIO.open_diagram_from_path(arg.open_filepath, err);
 	if(! diagram){
-		process.stderr.write(sprintf("can not open file `%s``%s`.\n", err.message, arg.open_filepath));
+		process.stderr.write(sprintf("error: can not open file `%s``%s`.\n", err.message, arg.open_filepath));
 		process.exit(-1);
 	}
 
-	if(0 != DaisyIO.export_diagram(arg.export_filepath, diagram, err)){
-		process.stderr.write(sprintf("can not export file `%s``%s`.\n", err.message, arg.export_filepath));
+	let errs = [];
+	const res = DaisyIO.write_export_diagram(arg.export_filepath, diagram, errs);
+	for(let i = 0; i < errs.length; i++){
+		process.stderr.write(sprintf("warning: export [%2d/%2d]:%8s:%s\n", i, errs.length, errs[i].level, errs[i].message));
+	}
+	if(! res){
+		process.stderr.write(sprintf("error: can not export file. `%s`\n", arg.export_filepath));
 		process.exit(-1);
 	}
-
 }
 
 main();

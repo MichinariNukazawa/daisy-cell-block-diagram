@@ -17,16 +17,33 @@ module.exports = class DaisyIO{
 		err_.message = message;
 	}
 
+	static add_errs_(errs_, level, label, message)
+	{
+		let err_ = {};
+		DaisyIO.set_err_(err_, level, label, message);
+
+		if(! Array.isArray(errs_)){
+			console.error(errs_);
+			errs_ = [];
+		}
+		errs_.push(err_);
+	}
+
 	/** @return success: diagram object, error: null */
 	static open_diagram_from_path(filepath, err_)
 	{
+		if(typeof filepath !== 'string'){
+			DaisyIO.set_err_(err_, 'bug', "Open", "not filepath.");
+			return null;
+		}
+
 		let strdata = '';
 		try{
 			strdata = fs.readFileSync(filepath, 'utf-8');
 		}catch(err){
 			console.debug(err);
 			DaisyIO.set_err_(err_, 'warning', "Open", err.message);
-			return -1;
+			return null;
 		}
 
 		let raw_diagram = {};
@@ -46,10 +63,32 @@ module.exports = class DaisyIO{
 		return sanitized_diagram.diagram;
 	}
 
-	static export_diagram(filepath, diagram, err_)
+	static get_ext_from_filepath(filepath)
+	{
+		return filepath.match(/\.[a-zA-Z0-9]*$/)[0];
+	}
+
+	static write_export_diagram(filepath, diagram, errs_)
 	{
 		// 周辺情報: 0x0pxのSVGを開くとeye of gnomeが読み込みエラーを起こす。
 
+		const ext = DaisyIO.get_ext_from_filepath(filepath);
+
+		let res;
+		switch(ext){
+			case '.svg':
+				res = DaisyIO.write_export_svg_from_diagram_(filepath, diagram, errs_);
+				break;
+			default:
+				DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("invalid file type. :`%s`", filepath));
+				return false;
+		}
+
+		return res;
+	}
+
+	static write_export_svg_from_diagram_(filepath, diagram, errs_)
+	{
 		const diagramSize = Diagram.getSize(diagram);
 		//console.debug(diagramSize);
 		/*
@@ -59,26 +98,28 @@ module.exports = class DaisyIO{
 			diagramSize.height);
 		*/
 
-		let err = {};
-		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, err);
+		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, errs_);
+		if(null === strdata){
+			return false;
+		}
 
 		try{
 			fs.writeFileSync(filepath, strdata);
 		}catch(err){
-			DaisyIO.add_err_(err_, "warning", "Export", sprintf("writeFile error. :`%s`", filepath));
-			return -1;
+			DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("writeFile error. :`%s`", filepath));
+			return false;
 		}
 
-		return 0;
+		return true;
 	}
 
-	static get_dummy_draw_diagram_(diagram, err_)
+	static get_dummy_draw_diagram_(diagram, errs_)
 	{
 		let dummy_elem = document.createElementNS('http://www.w3.org/2000/svg','svg');
 		let dummy_rhandle = new RenderingHandle(dummy_elem);
 		let draw = dummy_rhandle.get_draw();
 		if(null === draw){
-			DaisyIO.set_err_(err_, "warning", "Export", "internal dummy element can not generate.");
+			DaisyIO.set_errs_(errs_, "warning", "Export", "internal dummy element can not generate.");
 			return null;
 		}
 
@@ -90,9 +131,9 @@ module.exports = class DaisyIO{
 		return draw;
 	}
 
-	static get_svg_string_from_diagram_(diagram, err_)
+	static get_svg_string_from_diagram_(diagram, errs_)
 	{
-		let draw = DaisyIO.get_dummy_draw_diagram_(diagram, err_);
+		let draw = DaisyIO.get_dummy_draw_diagram_(diagram, errs_);
 		if(null === draw){
 			return null;
 		}
