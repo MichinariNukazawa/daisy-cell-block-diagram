@@ -21,8 +21,7 @@ CLI_BIN := bin/daisy-cell-block-diagram-cli.js
 
 command-line-test:
 	bash command-line-test/invalid-test.sh		$(CLI_BIN)
-	bash command-line-test/convert-test-00.sh	$(CLI_BIN)
-	bash command-line-test/convert-test-01.sh	$(CLI_BIN)
+	bash command-line-test/export-test.sh		$(CLI_BIN)
 
 unittest:
 	npm run test
