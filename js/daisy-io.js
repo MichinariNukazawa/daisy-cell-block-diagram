@@ -2,12 +2,6 @@
 
 const sprintf = require('sprintf-js').sprintf;
 const fs = require("fs");
-const xml_formatter = require('xml-formatter');
-
-const Version = require('./version');
-const Diagram = require('./diagram');
-const RenderingHandle = require('./renderer').RenderingHandle;
-const Renderer = require('./renderer').Renderer;
 
 module.exports = class DaisyIO{
 	static set_err_(err_, level, label, message)
@@ -32,6 +26,8 @@ module.exports = class DaisyIO{
 	/** @return success: diagram object, error: null */
 	static open_diagram_from_path(filepath, err_)
 	{
+		const Diagram = require('./diagram');
+
 		if(typeof filepath !== 'string'){
 			DaisyIO.set_err_(err_, 'bug', "Open", "not filepath.");
 			return null;
@@ -106,6 +102,9 @@ module.exports = class DaisyIO{
 
 	static get_dummy_draw_diagram_(diagram, errs_)
 	{
+		const RenderingHandle = require('./renderer').RenderingHandle;
+		const Renderer = require('./renderer').Renderer;
+
 		let dummy_elem = document.createElementNS('http://www.w3.org/2000/svg','svg');
 		let dummy_rhandle = new RenderingHandle(dummy_elem);
 		let draw = dummy_rhandle.get_draw();
@@ -124,6 +123,9 @@ module.exports = class DaisyIO{
 
 	static get_svg_string_from_diagram_(diagram, errs_)
 	{
+		const xml_formatter = require('xml-formatter');
+		const Version = require('./version');
+
 		let draw = DaisyIO.get_dummy_draw_diagram_(diagram, errs_);
 		if(null === draw){
 			return null;
