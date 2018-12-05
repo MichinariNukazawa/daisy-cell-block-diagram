@@ -83,23 +83,6 @@ module.exports = class DaisyIO{
 		return res;
 	}
 
-	static write_export_svg_from_diagram_(filepath, diagram, errs_)
-	{
-		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, errs_);
-		if(null === strdata){
-			return false;
-		}
-
-		try{
-			fs.writeFileSync(filepath, strdata);
-		}catch(err){
-			DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("writeFile error. :`%s`", filepath));
-			return false;
-		}
-
-		return true;
-	}
-
 	static get_dummy_draw_diagram_(diagram, errs_)
 	{
 		const RenderingHandle = require('./renderer').RenderingHandle;
@@ -121,6 +104,23 @@ module.exports = class DaisyIO{
 		return draw;
 	}
 
+	static write_export_svg_from_diagram_(filepath, diagram, errs_)
+	{
+		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, errs_);
+		if(null === strdata){
+			return false;
+		}
+
+		try{
+			fs.writeFileSync(filepath, strdata);
+		}catch(err){
+			DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("writeFile error. :`%s`", filepath));
+			return false;
+		}
+
+		return true;
+	}
+
 	static get_svg_string_from_diagram_(diagram, errs_)
 	{
 		const xml_formatter = require('xml-formatter');
@@ -139,5 +139,6 @@ module.exports = class DaisyIO{
 		let options = {indentation: '\t',};
 		return xml_formatter(s, options);
 	}
+
 };
 
