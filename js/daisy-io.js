@@ -89,15 +89,6 @@ module.exports = class DaisyIO{
 
 	static write_export_svg_from_diagram_(filepath, diagram, errs_)
 	{
-		const diagramSize = Diagram.getSize(diagram);
-		//console.debug(diagramSize);
-		/*
-		const strdata = sprintf(
-			'<?xml version="1.0" encoding="utf-8"?><svg width="%dpx" height="%dpx"></svg>',
-			diagramSize.width,
-			diagramSize.height);
-		*/
-
 		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, errs_);
 		if(null === strdata){
 			return false;
