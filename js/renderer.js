@@ -124,8 +124,8 @@ module.exports.Renderer = class Renderer{
 		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print.margin');
 		let draw = rendering_handle.get_draw();
 		draw.size(
-			diagramSize.x + (property__print_margin.x * 2),
-			diagramSize.y + (property__print_margin.y * 2)
+			diagramSize.width  + (property__print_margin.x * 2),
+			diagramSize.height + (property__print_margin.y * 2)
 		);
 
 		rendering_handle.get_document_root_group().translate(property__print_margin.x, property__print_margin.y);
@@ -229,8 +229,8 @@ module.exports.Renderer = class Renderer{
 			'stroke-width':		property__print_border_width,
 		};
 		const fbox = [
-			diagramSize.x + (property__print_margin.x * 2) - (property__print_border_width),
-			diagramSize.y + (property__print_margin.y * 2) - (property__print_border_width),
+			diagramSize.width  + (property__print_margin.x * 2) - (property__print_border_width),
+			diagramSize.height + (property__print_margin.y * 2) - (property__print_border_width),
 		]; // strokeの分を引く
 		background_group.rect(fbox[0], fbox[1])
 			.move((property__print_border_width / 2), (property__print_border_width / 2))

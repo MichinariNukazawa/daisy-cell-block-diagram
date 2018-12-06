@@ -135,8 +135,8 @@ module.exports = class Diagram{
 		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block.size');
 		const cellBlockArea = Diagram.getCellBlockArea_(diagram);
 		return {
-			'x': (cellBlockArea[0]) * property__cell_block_size.x,
-			'y': (cellBlockArea[1]) * property__cell_block_size.y
+			'width' : (cellBlockArea[0]) * property__cell_block_size.x,
+			'height': (cellBlockArea[1]) * property__cell_block_size.y
 		};
 	}
 
