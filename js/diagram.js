@@ -130,7 +130,7 @@ module.exports = class Diagram{
 		return ObjectUtil.getPropertyFromPath(default_diagram, property_path);
 	}
 
-	static getSize(diagram)
+	static get_size(diagram)
 	{
 		const property__cell_block_size = Diagram.getMemberOrDefault(diagram, 'property.cell_block.size');
 		const cellBlockArea = Diagram.getCellBlockArea_(diagram);

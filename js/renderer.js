@@ -120,7 +120,7 @@ module.exports.Renderer = class Renderer{
 
 	static expand_diagram_margin_for_export(rendering_handle, diagram)
 	{
-		const diagramSize = Diagram.getSize(diagram);
+		const diagramSize = Diagram.get_size(diagram);
 		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print.margin');
 		let draw = rendering_handle.get_draw();
 		draw.size(
@@ -143,7 +143,7 @@ module.exports.Renderer = class Renderer{
 		}
 
 		let draw = rendering_handle.get_draw();
-		const diagramSize = Diagram.getSize(diagram);
+		const diagramSize = Diagram.get_size(diagram);
 		draw.size(diagramSize.width, diagramSize.height);
 
 		Renderer.draw_background_(rendering_handle, diagram);
@@ -219,7 +219,7 @@ module.exports.Renderer = class Renderer{
 	{
 		let background_group = rendering_handle.get_background_group();
 
-		const diagramSize = Diagram.getSize(diagram);
+		const diagramSize = Diagram.get_size(diagram);
 		const property__print_margin = Diagram.getMemberOrDefault(diagram, 'property.print.margin');
 		const property__print_border_width = Diagram.getMemberOrDefault(diagram, 'property.print.border_width');
 
