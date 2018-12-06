@@ -5,20 +5,39 @@ const sprintf = require('sprintf-js').sprintf;
 const ObjectUtil = require('./object-util');
 
 module.exports = class Diagram{
-	static sanitize_document(src_diagram, err_)
+	static set_err_(err_, level, label, message)
 	{
-		if(! src_diagram.hasOwnProperty('diagram')){
-			err_.message = 'nothing property `diagram`';
+		err_.level = level;
+		err_.label = label;
+		err_.message = message;
+	}
+
+	static add_errs_(errs_, level, label, message)
+	{
+		let err_ = {};
+		DaisyIO.set_err_(err_, level, label, message);
+
+		if(! Array.isArray(errs_)){
+			console.error(errs_);
+			errs_ = [];
+		}
+		errs_.push(err_);
+	}
+
+	static sanitize_document(src_document, errs_)
+	{
+		if(! src_document.hasOwnProperty('diagram')){
+			add_errs_(errs_, 'error', 'Document', 'nothing property `diagram`');
 			return null;
 		}
 
-		const file_kind = ObjectUtil.getPropertyFromPath(src_diagram, 'file_kind');
+		const file_kind = ObjectUtil.getPropertyFromPath(src_document, 'file_kind');
 		if(null === file_kind){
-			err_.message = 'nothing property `file_kind`';
+			add_errs_(errs_, 'error', 'Document', 'nothing property `file_kind`');
 			return null;
 		}
 		if('daisy diagram' != file_kind){
-			err_.message = sprintf('invalid `file_kind`:%s`', file_kind);
+			add_errs_(errs_, 'error', 'Document', sprintf('invalid `file_kind`:%s`', file_kind));
 			return null;
 		}
 
@@ -26,7 +45,41 @@ module.exports = class Diagram{
 		// check tree
 		// check property
 
+		return ObjectUtil.deepcopy(src_document);
+	}
+
+	static sanitize(src_diagram, errs_)
+	{
+		//! @todo not implement
 		return ObjectUtil.deepcopy(src_diagram);
+	}
+
+	static create_from_native_format_string(strdata, errs_)
+	{
+		let native_doc = {};
+		try{
+			native_doc = JSON.parse(strdata);
+		}catch(err){
+			console.debug(err);
+			DaisyIO.add_errs_(errs_, 'error', "Diagram", err.message);
+			return null;
+		}
+
+		if(null === Diagram.sanitize_document(native_doc, errs_)){
+			return null;
+		}
+
+		if(! native_doc.hasOwnProperty('diagram')){
+			DaisyIO.add_errs_(errs_, 'error', "Diagram", 'nothing property "diagram"');
+			return null;
+		}
+
+		const sanitized_diagram = Diagram.sanitize(native_doc.diagram, errs_);
+		if(null === sanitized_diagram){
+			return null;
+		}
+
+		return sanitized_diagram;
 	}
 
 	static getArrowMemberOrDefault(diagram, arrow, property_path)

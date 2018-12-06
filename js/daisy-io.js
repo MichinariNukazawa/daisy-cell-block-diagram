@@ -23,13 +23,12 @@ module.exports = class DaisyIO{
 		errs_.push(err_);
 	}
 
-	/** @return success: diagram object, error: null */
-	static open_diagram_from_path(filepath, err_)
+	static open_diagram_from_path(filepath, errs_)
 	{
 		const Diagram = require('./diagram');
 
 		if(typeof filepath !== 'string'){
-			DaisyIO.set_err_(err_, 'bug', "Open", "not filepath.");
+			DaisyIO.add_errs_(errs_, 'bug', "Open", "not filepath.");
 			return null;
 		}
 
@@ -38,25 +37,16 @@ module.exports = class DaisyIO{
 			strdata = fs.readFileSync(filepath, 'utf-8');
 		}catch(err){
 			console.debug(err);
-			DaisyIO.set_err_(err_, 'warning', "Open", err.message);
+			DaisyIO.add_errs_(errs_, 'warning', "Open", err.message);
 			return null;
 		}
 
-		let raw_diagram = {};
-		try{
-			raw_diagram = JSON.parse(strdata);
-		}catch(err){
-			console.debug(err);
-			DaisyIO.set_err_(err_, 'warning', "Open", err.message);
-			return null;
-		}
-
-		const sanitized_diagram = Diagram.sanitize_document(raw_diagram, err_);
+		const sanitized_diagram = Diagram.create_from_native_format_string(strdata, errs_);
 		if(null === sanitized_diagram){
 			return null;
 		}
 
-		return sanitized_diagram.diagram;
+		return sanitized_diagram;
 	}
 
 	static get_ext_from_filepath(filepath)
@@ -69,7 +59,7 @@ module.exports = class DaisyIO{
 		// 周辺情報: 0x0pxのSVGを開くとeye of gnomeが読み込みエラーを起こす。
 
 		if(typeof filepath !== 'string'){
-			DaisyIO.set_errs_(errs_, 'bug', "Export", "not filepath.");
+			DaisyIO.add_errs_(errs_, 'bug', "Export", "not filepath.");
 			return null;
 		}
 
@@ -97,7 +87,7 @@ module.exports = class DaisyIO{
 		let dummy_rhandle = new RenderingHandle(dummy_elem);
 		let draw = dummy_rhandle.get_draw();
 		if(null === draw){
-			DaisyIO.set_errs_(errs_, "warning", "Export", "internal dummy element can not generate.");
+			DaisyIO.add_errs_(errs_, "warning", "Export", "internal dummy element can not generate.");
 			return null;
 		}
 
