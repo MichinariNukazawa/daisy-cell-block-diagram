@@ -37,14 +37,14 @@ grep 'width="32"' ${DST_FILEPATH} > /dev/null
 grep 'height="32"' ${DST_FILEPATH} > /dev/null
 
 # png
-#FILES=`find ./fileformat-example -name "*.daisydiagram" -type f`
-#for F in $FILES; do
-#	# PlantUML(.puml)
-#	SOURCE_FILEPATH=$F
-#	DST_FILEPATH=${OBJECT_DIR}/$(basename ${SOURCE_FILEPATH}).png
-#
-#	${BIN} ${SOURCE_FILEPATH} -o ${DST_FILEPATH}
-#	[ -s ${DST_FILEPATH} ] # file is not zero size
-#	STR=`file ${DST_FILEPATH}` ; [[ "${STR}" =~ "PNG" ]] # file type
-#done
+FILES=`find ./fileformat-example -name "*.daisydiagram" -type f`
+for F in $FILES; do
+	# PlantUML(.puml)
+	SOURCE_FILEPATH=$F
+	DST_FILEPATH=${OBJECT_DIR}/$(basename ${SOURCE_FILEPATH}).png
+
+	${BIN} ${SOURCE_FILEPATH} -o ${DST_FILEPATH}
+	[ -s ${DST_FILEPATH} ] # file is not zero size
+	STR=`file ${DST_FILEPATH}` ; [[ "${STR}" =~ "PNG" ]] # file type
+done
 
