@@ -68,6 +68,11 @@ module.exports = class DaisyIO{
 	{
 		// 周辺情報: 0x0pxのSVGを開くとeye of gnomeが読み込みエラーを起こす。
 
+		if(typeof filepath !== 'string'){
+			DaisyIO.set_errs_(errs_, 'bug', "Export", "not filepath.");
+			return null;
+		}
+
 		const ext = DaisyIO.get_ext_from_filepath(filepath);
 
 		let res;
