@@ -78,7 +78,7 @@ module.exports = class DaisyIO{
 		return res;
 	}
 
-	static get_dummy_draw_diagram_(diagram, errs_)
+	static get_dummy_draw_from_diagram_(diagram, errs_)
 	{
 		const RenderingHandle = require('./renderer').RenderingHandle;
 		const Renderer = require('./renderer').Renderer;
@@ -121,7 +121,7 @@ module.exports = class DaisyIO{
 		const xml_formatter = require('xml-formatter');
 		const Version = require('./version');
 
-		let draw = DaisyIO.get_dummy_draw_diagram_(diagram, errs_);
+		let draw = DaisyIO.get_dummy_draw_from_diagram_(diagram, errs_);
 		if(null === draw){
 			return null;
 		}
